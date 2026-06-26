@@ -1,0 +1,25 @@
+name: AdvancementSync
+version: 1.2.0
+main: dev.ixpu.advancementsync.AdvancementSync
+description: Cross-server advancement synchronization using Redis and MySQL
+authors: [ixpu]
+
+api-version: "1.21"
+
+commands:
+  advsync:
+    description: AdvancementSync command
+    usage: "/advsync <reset|rollback|reload|status|help>"
+    aliases:
+      - ads
+
+permissions:
+  advancementsync.command.rollback:
+    description: Permission to rollback player advancements
+    default: op
+  advancementsync.command.reset:
+    description: Permission to reset player advancements
+    default: op
+  advancementsync.command.reload:
+    description: Permission to reload config
+    default: op

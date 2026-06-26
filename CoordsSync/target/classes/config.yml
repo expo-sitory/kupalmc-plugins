@@ -1,0 +1,215 @@
+# ==================================================================
+# CoordsSync Configuration File
+# ==================================================================
+# This file controls all settings for the CoordsSync plugin
+# Changes to this file require a plugin reload: /coordssync reload
+# For support, visit: https://github.com/expo-sitory
+# ==================================================================
+
+
+# ==================================================================
+# REDIS CONFIGURATION
+# ==================================================================
+# Redis is the PRIMARY database for coordinate synchronization
+# If Redis is unavailable, the plugin will fallback to MySQL (if enabled)
+redis:
+  # The hostname or IP address of your Redis server
+  # Use 'localhost' if Redis is on the same machine
+  # Use the server IP (e.g., '192.168.1.100') for remote Redis servers
+  host: localhost
+  
+  # The port Redis is running on
+  # Default Redis port is 6379
+  # Only change this if you configured Redis to use a different port
+  port: 6379
+  
+  # The password to authenticate with Redis
+  # Leave empty ("") if Redis has no password
+  # If Redis requires authentication, enter the password here
+  # Note: Passwords are case-sensitive
+  password: ""
+
+
+# ==================================================================
+# MYSQL FALLBACK CONFIGURATION
+# ==================================================================
+# MySQL is the FALLBACK database used when Redis is unavailable
+# This provides redundancy and ensures coordinates are saved even if Redis goes down
+database:
+  # The type of database
+  # Currently only 'mysql' is supported
+  # This field is reserved for future database types (mongodb, postgresql, etc.)
+  type: mysql
+  
+  # Enable or disable MySQL fallback
+  # Set to 'true' to enable MySQL as a backup database
+  # Set to 'false' to disable MySQL (coordinates will only be saved to Redis)
+  enabled: false
+  
+  # The hostname or IP address of your MySQL server
+  # Use 'localhost' if MySQL is on the same machine
+  # Use the server IP (e.g., '192.168.1.100') for remote MySQL servers
+  # Example: '192.168.1.50' or 'mysql.example.com'
+  host: localhost
+  
+  # The port MySQL is running on
+  # Default MySQL port is 3306
+  # Only change this if you configured MySQL to use a different port
+  # Common alternative port: 3307 (if you have multiple MySQL instances)
+  port: 3306
+  
+  # The name of the database where coordinates will be stored
+  # The database must exist before the plugin starts
+  # You can create it with: CREATE DATABASE coordssync;
+  # The plugin will create the required tables automatically
+  database: coordssync
+  
+  # The MySQL username to authenticate with
+  # This user must have permissions to create tables and insert/update data
+  # Never use 'root' in production for security reasons
+  # Example: 'coordssync_user' with appropriate permissions
+  username: root
+  
+  # The MySQL password for the username above
+  # Leave empty ("") if the user has no password
+  # Passwords are case-sensitive
+  # Avoid special characters that require escaping (!, @, etc.) when possible
+  password: ""
+  
+  # Connection Pool Settings
+  # These settings control how the plugin manages database connections
+  pool:
+    # Maximum number of database connections in the pool
+    # Higher values = more concurrent connections = more memory usage
+    # Set to 10-20 for small servers, 20-50 for larger networks
+    # Too many connections can overwhelm the MySQL server
+    max-connections: 10
+    
+    # Minimum number of idle connections to keep open
+    # The pool will maintain at least this many connections at all times
+    # Set to 2-5 for most setups
+    # Lower values save memory but may cause slight delays
+    min-idle: 2
+    
+    # Connection timeout in milliseconds (1000ms = 1 second)
+    # How long to wait for a database connection before timing out
+    # Set to 5000 (5 seconds) for most setups
+    # Increase this if you have a slow/distant MySQL server
+    connection-timeout: 5000
+
+# ==================================================================
+# SERVER IDENTIFICATION
+# ==================================================================
+# Each server in your network must have a unique ID
+# This allows CoordsSync to track which server players are on
+server-id: server-1
+  # Examples of server IDs for different purposes:
+  # server-id: survival-1       (Survival world 1)
+  # server-id: survival-2       (Survival world 2)
+  # 
+  # Guidelines for naming:
+  # - Use lowercase letters, numbers, and hyphens only
+  # - Keep names short but descriptive (max 50 characters)
+  # - Don't use spaces or special characters
+  # - Make sure each server in your network has a DIFFERENT ID
+
+# ==================================================================
+# FEATURE TOGGLES
+# ==================================================================
+# Enable or disable specific features of the plugin
+features:
+  # Teleport players to their last known location when they join
+  # When enabled: Players spawn at their previous location instead of spawn point
+  # When disabled: Players spawn at the default spawn point
+  # Set to 'true' to enable this feature
+  # Set to 'false' to disable this feature
+  # Note: This only works if the world exists on this server
+  teleport-on-join: true
+  
+  # Automatically save player coordinates at regular intervals
+  # When enabled: Player positions are saved every few ticks (automatically)
+  # When disabled: Coordinates are only saved on specific events
+  # Set to 'true' to enable automatic saving (recommended)
+  # Set to 'false' to save only on join/quit events
+  # This feature keeps coordinates up-to-date across the network
+  periodic-save: true
+  
+  # Show chat notifications when coordinates are synchronized
+  # When enabled: Players see a message when their location is synced across servers
+  # When disabled: Syncing happens silently (no messages)
+  # Set to 'true' to enable notifications
+  # Set to 'false' to disable notifications (recommended for large servers)
+  # Note: Only admins/ops see these messages by default
+  sync-alerts: true
+  
+  # Enable MySQL database as fallback when Redis is unavailable
+  # When enabled: Coordinates automatically save to MySQL if Redis fails
+  # When disabled: Plugin will not work if Redis is unavailable
+  # Set to 'true' to enable fallback (recommended for reliability)
+  # Set to 'false' to disable fallback (Redis-only mode)
+  # This feature provides redundancy and ensures data isn't lost
+  use-mysql-fallback: true
+
+# ==================================================================
+# LOGGING AND DEBUGGING
+# ==================================================================
+# These settings control plugin logging behavior
+logging:
+  # Set the logging level for debug information
+  # Valid levels: DEBUG, INFO, WARN, ERROR
+  # DEBUG = Most detailed (shows everything)
+  # INFO = Normal information (recommended)
+  # WARN = Only warnings and errors
+  # ERROR = Only errors
+  # Use DEBUG only if troubleshooting issues
+  level: INFO
+  
+  # Enable or disable detailed Redis operation logging
+  # When enabled: Every Redis operation is logged (verbose)
+  # When disabled: Only errors are logged (recommended)
+  # Set to 'true' only for debugging Redis issues
+  # Set to 'false' for normal operation (default)
+  log-redis-operations: false
+  
+  # Enable or disable detailed database operation logging
+  # When enabled: Every MySQL query is logged (very verbose)
+  # When disabled: Only errors are logged (recommended)
+  # Set to 'true' only for debugging database issues
+  # Set to 'false' for normal operation (default)
+  log-database-operations: false
+
+# ==================================================================
+# PERFORMANCE TUNING
+# ==================================================================
+# These settings affect plugin performance and server impact
+performance:
+  # How often to save player coordinates (in game ticks)
+  # 20 ticks = 1 second in Minecraft
+  # Default 20 = save every second
+  # Lower values = more frequent saves = more database load
+  # Higher values = less frequent saves = faster server performance
+  # Recommended: 20-40 (every 1-2 seconds)
+  save-interval-ticks: 20
+  
+  # Enable async database operations
+  # When enabled: Database operations don't block the server thread (recommended)
+  # When disabled: Database operations run on the main server thread (not recommended)
+  # Set to 'true' for better performance (default)
+  # Set to 'false' only if you have async compatibility issues
+  async-database-operations: true
+  
+  # Maximum number of player data updates to batch before saving
+  # Updates multiple players' coordinates together for efficiency
+  # Default 10 = save up to 10 player updates at once
+  # Higher values = better performance but slight delay in syncing
+  # Lower values = more frequent saves but higher database load
+  batch-size: 10
+
+# ==================================================================
+# ADVANCED SETTINGS
+# ==================================================================
+# Only change these if you know what you're doing!
+advanced:
+  # Redis Pub/Sub channel name for cross-server communication
+  # All servers in your network should use the SAME channel name
+  # Change

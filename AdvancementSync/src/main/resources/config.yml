@@ -1,0 +1,77 @@
+# ==================================================================
+# AdvancementSync Configuration File
+# ==================================================================
+# This file controls all settings for the AdvancementSync plugin
+# Changes to this file require a plugin reload: /advsync reload
+# Any database changes requires server restart
+# For support, visit: https://github.com/expo-sitory
+# ==================================================================
+
+# Database Configuration
+database:
+
+# ==================================================================
+# REDIS CONFIGURATION
+# ==================================================================
+# Redis is the PRIMARY database for advancements synchronization
+
+  redis:
+    host: localhost
+    port: 6379
+    password: null
+    ssl: false
+    timeout-ms: 5000
+  
+# ==================================================================
+# MYSQL CONFIGURATION
+# ==================================================================
+# MySQL is the fallback and PERSISTENT storage for advancement synchronization
+
+  mysql:
+    host: localhost
+    port: 3306
+    username: root
+    password: password
+    database: advancements
+    pool-size: 10
+    pool-name: AdvancementSync-Pool
+    connection-timeout-ms: 30000
+    idle-timeout-ms: 600000
+    max-lifetime-ms: 1800000
+
+# Sync Configuration
+sync:
+  # Maximum time to wait for database response before fallback
+  async-timeout-ms: 5000
+  
+
+# ==================================================================
+# FEATURE TOGGLES
+# ==================================================================
+# Enable or disable specific features of the plugin
+features:
+  # Sync advancements on unlock (immediate sync)
+  sync-on-unlock: true
+  
+  # Perform assurance check on player disconnect
+  sync-on-disconnect: true
+  
+  # Load advancements on pre-login
+  load-on-prelogin: true
+
+  # Enable debug logging
+  enable-debug-logging: true
+  
+  # Log detailed advancement sync operations
+  verbose-logging: false
+
+# ==================================================================
+# LOGGING AND DEBUGGING
+# ==================================================================
+# These settings control plugin logging behavior
+logging:
+  # Log file name
+  file: "plugins/AdvancementSync/logs/advancement-sync.log"
+  
+  # Log level: INFO, DEBUG, WARN, ERROR
+  level: "DEBUG"

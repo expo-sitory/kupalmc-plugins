@@ -1,0 +1,5 @@
+name: KeepEffects
+version: 1.0.0
+description: Keep player active effects after using a Totem of Undying
+main: dev.ixpu.keepeffects.KeepEffects
+api-version: 1.21

@@ -1,0 +1,10 @@
+dev\ixpu\coordssync\database\RedisManager.class
+dev\ixpu\coordssync\listener\PlayerListener.class
+dev\ixpu\coordssync\CoordsSync.class
+dev\ixpu\coordssync\database\PlayerData.class
+dev\ixpu\coordssync\database\DatabaseManager.class
+dev\ixpu\coordssync\database\MySQLManager.class
+dev\ixpu\coordssync\database\RedisManager$CoordsSyncSubscriber.class
+dev\ixpu\coordssync\config\ConfigManager.class
+dev\ixpu\coordssync\database\RedisManager$PlayerCoordinates.class
+dev\ixpu\coordssync\command\CommandManager.class
