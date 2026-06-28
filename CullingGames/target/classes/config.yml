@@ -1,0 +1,171 @@
+# ==================================================================
+# Culling Games Configuration File
+# ==================================================================
+# This file controls all settings for the CullingGames plugin
+# Changes to this file require a plugin reload: /cgames reload
+# For support, visit: https://github.com/expo-sitory
+# ==================================================================
+
+# Message
+messages:
+  # Prefix that appears before all plugin messages
+  prefix: "&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ &7| &r "
+
+# Waves
+waves:
+  enabled: true
+  wave-duration: 300  # seconds (5 minutes)
+  
+  undead-wave:
+    order: 1
+    name: "Undead Wave"
+    mobs:
+      cursed_zombie:
+        amount: 4
+        points: 5
+        type: zombie
+        mob-name: "Cursed Zombie"
+        armor: netherite
+        armor-enchants:
+          - blast_protection:4
+          - fire_protection:4
+          - projectile_protection:4
+          - protection:4
+          - depth_strider:3
+          - soul_speed:3
+          - mending:1
+          - unbreaking:3
+          - vanishing_curse:1
+        weapon: netherite_axe
+        weapon-enchants:
+          - breach:6
+          - fire_aspect:2
+          - sharpness:5
+          - efficiency:5
+          - fortune:3
+          - silk_touch:3
+          - mending:1
+          - unbreaking:3
+          - vanishing_curse:1
+        attributes:
+          follow_range: 200
+          movement_speed: 0.30
+          water_movement_efficiency: 1
+
+      cursed_skeleton:
+        amount: 2
+        points: 10
+        type: stray
+        mob-name: "Cursed Skeleton"
+        armor: netherite
+        armor-enchants:
+          - blast_protection:4
+          - fire_protection:4
+          - projectile_protection:4
+          - protection:4
+          - depth_strider:3
+          - soul_speed:3
+          - mending:1
+          - unbreaking:3
+          - vanishing_curse:1
+        weapon: bow
+        weapon-enchants:
+          - flame:1
+          - power:20
+          - punch:5
+          - piercing:4
+          - mending:1
+          - unbreaking:3
+          - vanishing_curse:1
+        attributes:
+          attack_damage: 10
+          follow_range: 200
+          movement_speed: 0.3
+          water_movement_efficiency: 1
+
+  cursed-spirits:
+    order: 2
+    name: "Cursed Spirits Wave"
+    mobs:
+      rct_cebuano:
+        amount: 2
+        points: 3
+        type: witch
+        mob-name: "RCT Cebuano"
+        attributes:
+          follow_range: 100
+
+      fairy:
+        amount: 3
+        points: 7
+        type: vex
+        mob-name: "Fairy"
+        weapon: wooden_sword
+        weapon-enchants:
+          - knockback:10
+        attributes:
+          follow_range: 100
+          max_health: 40
+          scale: 1
+        custom-effects:
+          regeneration: 3
+
+      crocodile:
+        amount: 1
+        points: 15
+        type: silverfish
+        mob-name: "Crocodile"
+        attributes:
+          attack_knockback: 5
+          attack_speed: 3
+          max_health: 200
+          scale: 5
+
+  cursed-spirits-2:
+    order: 3
+    name: "Cursed Spirits Wave II"
+    mobs:
+      ghost_brute:
+        amount: 4
+        points: 7
+        type: piglin_brute
+        mob-name: "Ghost Brute"
+        custom-effects:
+          invisibility: 1
+        attributes:
+          follow_range: 100
+
+      bulldog:
+        amount: 3
+        points: 8
+        type: ravager
+        mob-name: "Bulldog ni Pyon"
+        weapon: stick
+        weapon-enchants:
+          - knockback:5
+        attributes:
+          attack_knockback: 5
+          scale: 0.5
+
+      fairy_2:
+        amount: 3
+        points: 7
+        type: vex
+        mob-name: "Fairy"
+        weapon: wooden_sword
+        weapon-enchants:
+          - knockback:10
+        attributes:
+          follow_range: 100
+          max_health: 40
+          scale: 1
+        custom-effects:
+          regeneration: 3
+
+  general:
+    baby_creeper:
+      points: 0
+      type: creeper
+      mob-name: "Baby Creeper"
+      attributes:
+        scale: 0.5

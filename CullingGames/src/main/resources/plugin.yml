@@ -1,0 +1,30 @@
+name: CullingGames
+version: 1.0.0
+main: dev.ixpu.cullingames.CullingGamesPlugin
+description: PvP point-stealing battle event with wave-based mob spawning
+authors: [Ixpu]
+api-version: 1.20
+load: STARTUP
+
+soft-depend:
+  - PlaceholderAPI
+  - TAB
+
+permissions:
+  cg.admin:
+    description: Access admin commands for CullingGames
+    default: op
+  cg.player:
+    description: Access player commands for CullingGames
+    default: true
+
+commands:
+  cgames:
+    description: Main CullingGames command
+    usage: /cgames <action> [args]
+    permission: cg.player
+    aliases: [cg]
+  cgamesforcejoinall:
+    description: Force join all online players to the event
+    usage: /cgamesforcejoinall
+    permission: cg.admin
