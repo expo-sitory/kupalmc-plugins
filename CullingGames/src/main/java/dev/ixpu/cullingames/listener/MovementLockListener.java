@@ -18,12 +18,12 @@ public class MovementLockListener implements Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
-        // Early exit for most cases
         if (!eventManager.isActive() || !eventManager.isPaused()) return;
         
         if (!eventManager.isParticipant(e.getPlayer().getUniqueId())) return;
 
-        // Only cancel if they actually moved (not just rotation)
+        if (e.getPlayer().isOp()) return;
+
         if (e.getFrom().getX() == e.getTo().getX() &&
             e.getFrom().getY() == e.getTo().getY() &&
             e.getFrom().getZ() == e.getTo().getZ()) {

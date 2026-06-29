@@ -93,11 +93,12 @@ public class WaveManager {
             return;
         }
         
-        // Spawn main wave mobs
+        int playerCount = onlinePlayers.size();
+        
         for (MobSpawn mobSpawn : wave.getMobs()) {
-            for (int i = 0; i < mobSpawn.getAmount(); i++) {
-                // Stagger spawns over wave duration
-                long delay = (long) ((configManager.getWaveDuration() / mobSpawn.getAmount()) * 20 * i);
+            int totalToSpawn = mobSpawn.getAmount() * playerCount;
+            for (int i = 0; i < totalToSpawn; i++) {
+                long delay = (long) ((configManager.getWaveDuration() / totalToSpawn) * 20 * i);
                 
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     Player target = onlinePlayers.get(new Random().nextInt(onlinePlayers.size()));
@@ -106,8 +107,7 @@ public class WaveManager {
             }
         }
         
-        // Spawn general baby creepers (10% chance)
-        int totalMobs = wave.getMobs().stream().mapToInt(MobSpawn::getAmount).sum();
+        int totalMobs = wave.getMobs().stream().mapToInt(MobSpawn::getAmount).sum() * playerCount;
         int babyCreepersToSpawn = Math.max(1, (int) (totalMobs * 0.1));
         
         MobSpawnData babyCreepData = configManager.getBabyCreeper();
@@ -127,11 +127,16 @@ public class WaveManager {
         if (!eventManager.isActive()) return;
         
         try {
-            // Spawn using MobBuilder instead of command execution
-            org.bukkit.entity.LivingEntity entity = MobBuilder.spawnMob(loc, mobSpawn.getMobData());
+            Random rand = new Random();
+            double offsetX = (rand.nextDouble() * 40) - 20;
+            double offsetZ = (rand.nextDouble() * 40) - 20;
+            
+            Location spawnLoc = loc.clone();
+            spawnLoc.add(offsetX, 0, offsetZ);
+            
+            org.bukkit.entity.LivingEntity entity = MobBuilder.spawnMob(spawnLoc, mobSpawn.getMobData());
             
             if (entity != null) {
-                // Register the mob for tracking and points
                 registerWaveMob(entity.getUniqueId(), mobSpawn.getPointValue());
             } else {
                 plugin.getLogger().warning(() -> "Failed to spawn mob: " + mobSpawn.getMobTypeId());
