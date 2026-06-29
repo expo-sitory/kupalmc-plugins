@@ -1,0 +1,1092 @@
+adaptMaster:
+  Triggers:
+  - onDamaged
+  Skills:
+    # Lava
+    - skill{s=trackLavaDamage} @self ?damagecause{cause=LAVA}
+    - skill{s=LavaAdapted} @self ?damagecause{cause=LAVA}
+    
+    # Entity Explosion
+    - skill{s=trackEntityExplosionDamage} @self ?damagecause{cause=ENTITY_EXPLOSION}
+    - skill{s=EntityExplosionAdapted} @self ?damagecause{cause=ENTITY_EXPLOSION}
+    
+    # Block Explosion
+    - skill{s=trackBlockExplosionDamage} @self ?damagecause{cause=BLOCK_EXPLOSION}
+    - skill{s=BlockExplosionAdapted} @self ?damagecause{cause=BLOCK_EXPLOSION}
+    
+    # Fire
+    - skill{s=trackFireDamage} @self ?damagecause{cause=FIRE}
+    - skill{s=FireAdapted} @self ?damagecause{cause=FIRE}
+    
+    # Fire Tick
+    - skill{s=trackFireTickDamage} @self ?damagecause{cause=FIRE_TICK}
+    - skill{s=FireTickAdapted} @self ?damagecause{cause=FIRE_TICK}
+    
+    # Drowning
+    - skill{s=trackDrowningDamage} @self ?damagecause{cause=DROWNING}
+    - skill{s=DrowningAdapted} @self ?damagecause{cause=DROWNING}
+    
+    # Suffocation
+    - skill{s=trackSuffocationDamage} @self ?damagecause{cause=SUFFOCATION}
+    - skill{s=SuffocationAdapted} @self ?damagecause{cause=SUFFOCATION}
+    
+    # Lightning
+    - skill{s=trackLightningDamage} @self ?damagecause{cause=LIGHTNING}
+    - skill{s=LightningAdapted} @self ?damagecause{cause=LIGHTNING}
+    
+    # Magic
+    - skill{s=trackMagicDamage} @self ?damagecause{cause=MAGIC}
+    - skill{s=MagicAdapted} @self ?damagecause{cause=MAGIC}
+    
+    # Wither
+    - skill{s=trackWitherDamage} @self ?damagecause{cause=WITHER}
+    - skill{s=WitherAdapted} @self ?damagecause{cause=WITHER}
+    
+    # Poison
+    - skill{s=trackPoisonDamage} @self ?damagecause{cause=POISON}
+    - skill{s=PoisonAdapted} @self ?damagecause{cause=POISON}
+    
+    # Starvation
+    - skill{s=trackStarvationDamage} @self ?damagecause{cause=STARVATION}
+    - skill{s=StarvationAdapted} @self ?damagecause{cause=STARVATION}
+    
+    # Dragon Breath
+    - skill{s=trackDragonBreathDamage} @self ?damagecause{cause=DRAGON_BREATH}
+    - skill{s=DragonBreathAdapted} @self ?damagecause{cause=DRAGON_BREATH}
+    
+    # Falling Block
+    - skill{s=trackFallingBlockDamage} @self ?damagecause{cause=FALLING_BLOCK}
+    - skill{s=FallingBlockAdapted} @self ?damagecause{cause=FALLING_BLOCK}
+    
+    # Freezing
+    - skill{s=trackFreezingDamage} @self ?damagecause{cause=FREEZING}
+    - skill{s=FreezingAdapted} @self ?damagecause{cause=FREEZING}
+    
+    # Hot Floor
+    - skill{s=trackHotFloorDamage} @self ?damagecause{cause=HOT_FLOOR}
+    - skill{s=HotFloorAdapted} @self ?damagecause{cause=HOT_FLOOR}
+    
+    # Thorns
+    - skill{s=trackThornsDamage} @self ?damagecause{cause=THORNS}
+    - skill{s=ThornsAdapted} @self ?damagecause{cause=THORNS}
+    
+    # World Border
+    - skill{s=trackWorldBorderDamage} @self ?damagecause{cause=WORLD_BORDER}
+    - skill{s=WorldBorderAdapted} @self ?damagecause{cause=WORLD_BORDER}
+    
+    # Cramming
+    - skill{s=trackCrammingDamage} @self ?damagecause{cause=CRAMMING}
+    - skill{s=CrammingAdapted} @self ?damagecause{cause=CRAMMING}
+
+adaptMessage:
+  Skills:     
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga just experienced a new type of damage source, it is only just a matter of time before he adapts to it...} @PIR{r=1000}
+
+# ===== LAVA =====
+trackLavaDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.LavaAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.LavaAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Lava Adaptation Flag &a<caster.var.LavaAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToLava} @self ?variableequals{var=caster.LavaAdaptCount;value="5"}
+
+adaptingToLava:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=dripping_lava;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=soul_fire_flame;amount=80;hS=1.5;vS=1.5;speed=0.2} @self
+    - effect:particles{particle=lava;amount=80;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=explosion_emitter;amount=50;hS=2;vS=2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 10 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - blackscreen{d=2} @PlayersInRadius{r=100}
+    - effect:particles{particle=lava;amount=300;hS=4;vS=4;speed=1} @self
+    - effect:particles{particle=dripping_lava;amount=200;hS=5;vS=5;speed=0.8} @self
+    - effect:particles{particle=explosion_emitter;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &6Lava} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &6ʟᴀᴠᴀ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.LavaAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.LavaAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+LavaAdapted:
+  Conditions:
+  - damagecause{cause=LAVA}  
+  - variableequals{var=caster.LavaAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== ENTITY EXPLOSION =====
+trackEntityExplosionDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.EntityExplosionAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.EntityExplosionAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Entity Explosion Adaptation Flag &c<caster.var.EntityExplosionAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToEntityExplosion} @self ?variableequals{var=caster.EntityExplosionAdaptCount;value="5"}
+
+adaptingToEntityExplosion:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=explosion_emitter;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=electric_spark;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=smoke;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=explosion_emitter;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=electric_spark;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=flash;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &cEntity Explosion} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &cᴇxᴘʟᴏsɪᴏɴ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.EntityExplosionAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.EntityExplosionAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+EntityExplosionAdapted:
+  Conditions:
+  - damagecause{cause=ENTITY_EXPLOSION}  
+  - variableequals{var=caster.EntityExplosionAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== BLOCK EXPLOSION =====
+trackBlockExplosionDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.BlockExplosionAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.BlockExplosionAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Block Explosion Adaptation Flag &c<caster.var.BlockExplosionAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToBlockExplosion} @self ?variableequals{var=caster.BlockExplosionAdaptCount;value="5"}
+
+adaptingToBlockExplosion:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=explosion_emitter;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=block;material=tnt;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=smoke;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=explosion_emitter;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=block;material=stone;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=flash;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &cTNT} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &cᴛɴᴛ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.BlockExplosionAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.BlockExplosionAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+BlockExplosionAdapted:
+  Conditions:
+  - damagecause{cause=BLOCK_EXPLOSION}  
+  - variableequals{var=caster.BlockExplosionAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== FIRE =====
+trackFireDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.FireAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.FireAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Fire Adaptation Flag &6<caster.var.FireAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToFire} @self ?variableequals{var=caster.FireAdaptCount;value="5"}
+
+adaptingToFire:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=flame;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=soul_fire_flame;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=small_flame;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=flame;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=soul_fire_flame;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=lava;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &6Fire} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &6ғɪʀᴇ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.FireAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.FireAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+FireAdapted:
+  Conditions:
+  - damagecause{cause=FIRE}  
+  - variableequals{var=caster.FireAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== FIRE_TICK =====
+trackFireTickDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.FireTickAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.FireTickAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Burning Adaptation Flag &6<caster.var.FireTickAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToFireTick} @self ?variableequals{var=caster.FireTickAdaptCount;value="5"}
+
+adaptingToFireTick:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=flame;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=soul_fire_flame;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=small_flame;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=flame;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=soul_fire_flame;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=small_flame;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &6Burning} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &6ʙᴜʀɴɪɴɢ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.FireTickAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.FireTickAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+FireTickAdapted:
+  Conditions:
+  - damagecause{cause=FIRE_TICK}  
+  - variableequals{var=caster.FireTickAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== DROWNING =====
+trackDrowningDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.DrowningAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.DrowningAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Drowning Adaptation Flag &b<caster.var.DrowningAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToDrowning} @self ?variableequals{var=caster.DrowningAdaptCount;value="5"}
+
+adaptingToDrowning:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=bubble;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=splash;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=underwater;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=bubble;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=bubble;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=splash;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=water;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &bDrowning} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &bᴅʀᴏᴡɴɪɴɢ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.DrowningAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.DrowningAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+DrowningAdapted:
+  Conditions:
+  - damagecause{cause=DROWNING}  
+  - variableequals{var=caster.DrowningAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== SUFFOCATION =====
+trackSuffocationDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.SuffocationAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.SuffocationAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Suffocation Adaptation Flag &8<caster.var.SuffocationAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToSuffocation} @self ?variableequals{var=caster.SuffocationAdaptCount;value="5"}
+
+adaptingToSuffocation:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=glow_squid_ink;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=smoke;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=large_smoke;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=smoke;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=glow_squid_ink;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=smoke;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=large_smoke;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &8Suffocation} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &8ꜱᴜғғᴏᴄᴀᴛɪᴏɴ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.SuffocationAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.SuffocationAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+SuffocationAdapted:
+  Conditions:
+  - damagecause{cause=SUFFOCATION}  
+  - variableequals{var=caster.SuffocationAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== LIGHTNING =====
+trackLightningDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.LightningAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.LightningAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Lightning Adaptation Flag &e<caster.var.LightningAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToLightning} @self ?variableequals{var=caster.LightningAdaptCount;value="5"}
+
+adaptingToLightning:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=electric_spark;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=gust;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=portal;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=electric_spark;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=electric_spark;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=gust;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=portal;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &eLightning} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &eʟɪɢʜᴛɴɪɴɢ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.LightningAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.LightningAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+LightningAdapted:
+  Conditions:
+  - damagecause{cause=LIGHTNING}  
+  - variableequals{var=caster.LightningAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== MAGIC =====
+trackMagicDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.MagicAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.MagicAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Magic Adaptation Flag &5<caster.var.MagicAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToMagic} @self ?variableequals{var=caster.MagicAdaptCount;value="5"}
+
+adaptingToMagic:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=enchant;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=entity_effect;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=note;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=enchant;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=enchant;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=entity_effect;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=note;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &5Magic} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &5ᴍᴀɢɪᴄ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.MagicAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.MagicAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+MagicAdapted:
+  Conditions:
+  - damagecause{cause=MAGIC}  
+  - variableequals{var=caster.MagicAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== WITHER =====
+trackWitherDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.WitherAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.WitherAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Wither Adaptation Flag &8<caster.var.WitherAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToWither} @self ?variableequals{var=caster.WitherAdaptCount;value="5"}
+
+adaptingToWither:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=soul_fire_flame;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=soul;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=smoke;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=soul_fire_flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=soul_fire_flame;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=soul;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=smoke;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &8Wither} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &8ᴡɪᴛʜᴇʀ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.WitherAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.WitherAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+WitherAdapted:
+  Conditions:
+  - damagecause{cause=WITHER}  
+  - variableequals{var=caster.WitherAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== POISON =====
+trackPoisonDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.PosionAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.PosionAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Poison Adaptation Flag &2<caster.var.PosionAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToPoison} @self ?variableequals{var=caster.PosionAdaptCount;value="5"}
+
+adaptingToPoison:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=poison;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=warped_spore;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=crimson_spore;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=poison;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=poison;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=warped_spore;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=crimson_spore;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &2Poison} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &2ᴘᴏɪsᴏɴ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.PosionAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.PosionAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+PoisonAdapted:
+  Conditions:
+  - damagecause{cause=POISON}  
+  - variableequals{var=caster.PosionAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== STARVATION =====
+trackStarvationDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.StarvationAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.StarvationAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Starvation Adaptation Flag &6<caster.var.StarvationAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToStarvation} @self ?variableequals{var=caster.StarvationAdaptCount;value="5"}
+
+adaptingToStarvation:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=dust;amount=150;hS=3;vS=3;speed=0.5;color=#FFD700} @self
+    - effect:particles{particle=raining_down;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=ambient_entity_effect;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=dust;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10;color=#FFD700} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=dust;amount=300;hS=5;vS=5;speed=1;color=#FFD700} @self
+    - effect:particles{particle=raining_down;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=ambient_entity_effect;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &6Starvation} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &6ꜱᴛᴀʀᴠᴀᴛɪᴏɴ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.StarvationAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.StarvationAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+StarvationAdapted:
+  Conditions:
+  - damagecause{cause=STARVATION}  
+  - variableequals{var=caster.StarvationAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== DRAGON_BREATH =====
+trackDragonBreathDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.DragonBreathAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.DragonBreathAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Dragon Breath Adaptation Flag &5<caster.var.DragonBreathAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToDragonBreath} @self ?variableequals{var=caster.DragonBreathAdaptCount;value="5"}
+
+adaptingToDragonBreath:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=dragon_breath;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=end_rod;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=portal;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=dragon_breath;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=dragon_breath;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=end_rod;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=portal;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &5Dragon Breath} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &5ᴅʀᴀɢᴏɴ ʙʀᴇᴀᴛʜ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.DragonBreathAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.DragonBreathAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+DragonBreathAdapted:
+  Conditions:
+  - damagecause{cause=DRAGON_BREATH}  
+  - variableequals{var=caster.DragonBreathAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== FALLING_BLOCK =====
+trackFallingBlockDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.FallingBlockAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.FallingBlockAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Falling Block Adaptation Flag &7<caster.var.FallingBlockAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToFallingBlock} @self ?variableequals{var=caster.FallingBlockAdaptCount;value="5"}
+
+adaptingToFallingBlock:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=block;material=stone;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=falling_dust;material=stone;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=dust_pillar;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=block;material=stone;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=block;material=stone;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=falling_dust;material=stone;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=dust_pillar;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &7Falling Block} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &7ғᴀʟʟɪɴɢ ʙʟᴏᴄᴋ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.FallingBlockAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.FallingBlockAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+FallingBlockAdapted:
+  Conditions:
+  - damagecause{cause=FALLING_BLOCK}  
+  - variableequals{var=caster.FallingBlockAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== FREEZING =====
+trackFreezingDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.FreezeAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.FreezeAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Freezing Adaptation Flag &b<caster.var.FreezeAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToFreezing} @self ?variableequals{var=caster.FreezeAdaptCount;value="5"}
+
+adaptingToFreezing:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=snowflake;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=block;material=ice;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=bubble;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=snowflake;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=snowflake;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=block;material=ice;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=bubble;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &bFreezing} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &bғʀᴇᴇᴢɪɴɢ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.FreezeAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.FreezeAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+FreezingAdapted:
+  Conditions:
+  - damagecause{cause=FREEZING}  
+  - variableequals{var=caster.FreezeAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== HOT_FLOOR =====
+trackHotFloorDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.HotFloorAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.HotFloorAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Hot Floor Adaptation Flag &c<caster.var.HotFloorAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToHotFloor} @self ?variableequals{var=caster.HotFloorAdaptCount;value="5"}
+
+adaptingToHotFloor:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=flame;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=lava;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=soul_fire_flame;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=flame;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=flame;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=lava;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=soul_fire_flame;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &cHot Floor} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &cʜᴏᴛ ғʟᴏᴏʀ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.HotFloorAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.HotFloorAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+HotFloorAdapted:
+  Conditions:
+  - damagecause{cause=HOT_FLOOR}  
+  - variableequals{var=caster.HotFloorAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== THORNS =====
+trackThornsDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.ThornsAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.ThornsAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Thorns Adaptation Flag &a<caster.var.ThornsAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToThorns} @self ?variableequals{var=caster.ThornsAdaptCount;value="5"}
+
+adaptingToThorns:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=claw;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=sweep_attack;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=enchant;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=claw;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=claw;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=sweep_attack;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=enchant;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &aThorns} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &aᴛʜᴏʀɴs";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.ThornsAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.ThornsAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+ThornsAdapted:
+  Conditions:
+  - damagecause{cause=THORNS}  
+  - variableequals{var=caster.ThornsAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== WORLD_BORDER =====
+trackWorldBorderDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.WorldBorderAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.WorldBorderAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] World Border Adaptation Flag &d<caster.var.WorldBorderAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToWorldBorder} @self ?variableequals{var=caster.WorldBorderAdaptCount;value="5"}
+
+adaptingToWorldBorder:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=barrier;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=vibration;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=portal;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=barrier;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=barrier;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=vibration;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=portal;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &dWorld Border} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &dᴡᴏʀʟᴅ ʙᴏʀᴅᴇʀ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.WorldBorderAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.WorldBorderAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+WorldBorderAdapted:
+  Conditions:
+  - damagecause{cause=WORLD_BORDER}  
+  - variableequals{var=caster.WorldBorderAdapted;value="true"}
+  Skills:
+    - cancelevent
+
+# ===== CRAMMING =====
+trackCrammingDamage:
+  Cooldown: 20
+  Conditions:
+    - variableequals{var=caster.EntityCrammingAdapted;value="false"}
+  Skills:
+    - variableadd{var=caster.EntityCrammingAdaptCount;amount=1} @self
+    - skill{s=adaptMessage;cd=1728000} @self
+    - message{m=&f[Debug] Cramming Adaptation Flag &4<caster.var.EntityCrammingAdaptCount>/5} @PIR{r=1000}
+    - skill{s=adaptingToCramming} @self ?variableequals{var=caster.EntityCrammingAdaptCount;value="5"}
+
+adaptingToCramming:
+  Cooldown: 1728000
+  Skills:
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=true} @self
+    - state{state=adapt} @self
+    - effect:particles{particle=poof;amount=150;hS=3;vS=3;speed=0.5} @self
+    - effect:particles{particle=item_slime;amount=100;hS=2;vS=2;speed=0.3} @self
+    - effect:particles{particle=slime;amount=80;hS=2;vS=2;speed=0.2} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=1.0} @self
+    - effect:sound{s=entity.warden.prepare_attack;v=2.5;p=0.8} @self
+    - effect:particles{particle=poof;amount=100;hS=5;vS=0.1;speed=0.2;repeat=8;repeatinterval=10} @self
+    - delay 40
+    - command{c="particle minecraft:elder_guardian <caster.l.x> <caster.l.y> <caster.l.z> 0 0 0 1 10 force @a"}
+    - command{c="playsound minecraft:entity.elder_guardian.curse master @a <caster.l.x> <caster.l.y> <caster.l.z> 62.5 1"}
+    - delay 40
+    - effect:particles{particle=poof;amount=300;hS=5;vS=5;speed=1} @self
+    - effect:particles{particle=item_slime;amount=200;hS=4;vS=4;speed=0.8} @self
+    - effect:particles{particle=slime;amount=100;hS=4;vS=4} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - heal{a=0.1} @self
+    - effect:particles{particle=happy_villager;amount=40;hS=1;vS=1;speed=0.15} @self
+    - effect:sound{s=entity.player.levelup;v=2;p=1.0} @self
+    - message{m=&d&lᴋᴜᴘᴀʟᴍᴄ &r&7- &fᴄᴜʟʟɪɴɢ ɢᴀᴍᴇꜱ  &7|  &fMahoraga Successfuly Adapted to &4Cramming} @PIR{r=1000}
+    - sendtitle{title="&eᴍᴀʜᴏʀᴀɢᴀ";subtitle="&fᴀᴅᴀᴘᴛᴇᴅ ᴛᴏ &4ᴄʀᴀᴍᴍɪɴɢ";d=100} @PlayersInRadius{r=1000}
+    - heal{a=200} @self
+    - delay 20
+    - effect:particles{particle=flash;amount=20} @self
+    - delay 20
+    - setvariable{var=caster.EntityCrammingAdapted;type=BOOLEAN;val=true} @self
+    - setvariable{var=caster.EntityCrammingAdaptCount;type=INTEGER;val=0} @self
+    - setstance{stance=normal} @self
+    - setAI{ai=false} @self
+    - setvariable{var=caster.Adapting;type=BOOLEAN;val=false} @self
+
+CrammingAdapted:
+  Conditions:
+  - damagecause{cause=CRAMMING}  
+  - variableequals{var=caster.EntityCrammingAdapted;value="true"}
+  Skills:
+    - cancelevent

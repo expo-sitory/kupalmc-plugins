@@ -1,0 +1,355 @@
+MahoragaSpawn:
+  Skills:
+  - model{mid=mahoraga;n=false} @self ~onSpawn
+  - potion{type=GLOWING;duration=2147483647;level=1} @self ~onSpawn
+  - potion{type=RESISTANCE;duration=2147483647;level=2} @self ~onSpawn
+  - potion{type=REGENERATION;duration=2147483647;level=2} @self ~onSpawn
+  - setstance{stance=normal} @self ~onSpawn
+  - setvariable{var=caster.LavaAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.EntityExplosionAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.BlockExplosionAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.FireAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.FireTickAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.DrowningAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.SuffocationAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.LightningAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.MagicAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.WitherAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.PosionAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.StarvationAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.DragonBreathAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.FallingBlockAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.EntityCrammingAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.FreezeAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.HotFloorAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.ThornsAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.FreezingAdaptCount;type=INTEGER;val=0} @self
+  - setvariable{var=caster.WorldBorderAdaptCount;type=INTEGER;val=0} @self
+
+  
+# PASSIVE
+MahoragaAura:
+  Skills:
+  - potion{type=BLINDNESS;duration=60;hasParticles=false} @PlayersInRadius{r=8}
+  - potion{type=SLOW;duration=60;hasParticles=false} @PlayersInRadius{r=8}
+  - potion{type=WITHER;duration=60;hasParticles=false} @PlayersInRadius{r=8}
+  - potion{type=HUNGER;duration=60;hasParticles=false} @PlayersInRadius{r=8}
+  
+
+
+# SKILLS:
+
+random:
+  Conditions:
+   - playersinradius{a=>0;r=5} true
+   - stance{s=normal;str=true} true
+  Skills:
+   - setstance{stance=randomSkill} @self
+   - setAI{ai=false} @self
+   - state{s=walk;remove=true} @self
+   - state{s=run;remove=true} @self
+   - state{s=smash;remove=true} @self
+   - state{s=quickSmash;remove=true} @self
+   - state{s=airSmash;remove=true} @self
+   - state{s=heavyBladeSlash;remove=true} @self
+   - state{s=quickBladeSlash;remove=true} @self
+   - randomskill{skills=smash,quickSmash;sync=true} @self
+
+# AIR SMASH
+airSmash:
+  Conditions:
+    - playersinradius{a=>0;r=30} true
+    - stance{s=normal;str=true} true
+  Skills:
+    - setAI{ai=false} @self
+    - state{s=walk;remove=true} @self
+    - state{s=run;remove=true} @self
+    - state{s=punch;remove=true} @self
+    - state{s=smash;remove=true} @self
+    - state{s=quickSmash;remove=true} @self
+    - state{s=heavyBladeSlash;remove=true} @self
+    - state{s=quickBladeSlash;remove=true} @self
+
+    - state{state=airSmash} @self
+    - setstance{stance=airSmash} @self
+    
+    - effect:particles{particle=portal;amount=80;hS=1;vS=1;speed=0.2} @self
+    - effect:particles{particle=cloud;amount=150;hS=4;vS=1;speed=0.15} @self
+    - effect:particles{particle=soul;amount=40;hS=0.5;vS=1;speed=0.05} @self
+
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+    
+    - delay 40
+
+    - teleport @NearestPlayer{r=30}
+    
+    - delay 5
+    
+    - effect:particles{particle=reverse_portal;amount=100;hS=1;vS=1;speed=0.3} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - effect:sound{s=entity.warden.attack_impact;v=2;p=0.7} @self
+    - effect:particles{particle=explosion_emitter;amount=1} @self
+    - effect:particles{particle=cloud;amount=150;hS=4;vS=1;speed=0.15} @self
+    - effect:particles{particle=block;material=stone;amount=120;hS=3;vS=1} @self
+    - effect:particles{particle=sonic_boom;amount=8;hS=2;vS=0.5} @self
+    
+    - delay 5
+    
+    - damage{a=50} @EntitiesNearOrigin{r=20}
+    - damage{a=50} @EntitiesNearOrigin{r=1}
+    - damage{a=50} @EntitiesNearOrigin{r=0}
+    - throw{velocity=15;velocityY=5} @PlayersNearOrigin{r=10}
+
+    - delay 150
+    - setstance{stance=normal} @self
+    - setAI{ai=true} @self
+
+smash:
+  Skills:
+    - setAI{ai=false} @self
+    - state{s=walk;remove=true} @self
+    - state{s=run;remove=true} @self
+    - state{s=punch;remove=true} @self
+    - state{s=airSmash;remove=true} @self
+    - state{s=quickSmash;remove=true} @self
+    - state{s=heavyBladeSlash;remove=true} @self
+    - state{s=quickBladeSlash;remove=true} @self
+
+    - state{state=smash} @self
+
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+   
+    - delay 30
+
+    - effect:particles{particle=reverse_portal;amount=100;hS=1;vS=1;speed=0.3} @self
+
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - effect:sound{s=entity.warden.attack_impact;v=2;p=0.7} @self
+
+    - effect:particles{particle=explosion_emitter;amount=1} @self
+    - effect:particles{particle=cloud;amount=150;hS=4;vS=1;speed=0.15} @self
+    - effect:particles{particle=block;material=stone;amount=120;hS=3;vS=1} @self
+    - effect:particles{particle=sonic_boom;amount=8;hS=2;vS=0.5} @self
+    - damage{a=25} @EntitiesNearOrigin{r=10}
+    - damage{a=25} @EntitiesNearOrigin{r=1}
+    - damage{a=25} @EntitiesNearOrigin{r=0}
+
+    - throw{velocity=10;velocityY=1} @PlayersNearOrigin{r=10}
+
+    - delay 100
+    - setstance{stance=normal} @self
+    - setAI{ai=true} @self
+    
+quickSmash:
+  Skills:
+    - setAI{ai=false} @self
+    - state{s=walk;remove=true} @self
+    - state{s=run;remove=true} @self
+    - state{s=punch;remove=true} @self
+    - state{s=airSmash;remove=true} @self
+    - state{s=smash;remove=true} @self
+    - state{s=heavyBladeSlash;remove=true} @self
+    - state{s=quickBladeSlash;remove=true} @self
+
+    - state{state=quickSmash} @self
+
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+   
+    - delay 10
+
+    - effect:particles{particle=reverse_portal;amount=100;hS=1;vS=1;speed=0.3} @self
+
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - effect:sound{s=entity.warden.attack_impact;v=2;p=0.7} @self
+
+    - effect:particles{particle=explosion_emitter;amount=1} @self
+    - effect:particles{particle=cloud;amount=150;hS=4;vS=1;speed=0.15} @self
+    - effect:particles{particle=block;material=stone;amount=120;hS=3;vS=1} @self
+    - effect:particles{particle=sonic_boom;amount=8;hS=2;vS=0.5} @self
+    - damage{a=15} @EntitiesNearOrigin{r=10}
+    - damage{a=15} @EntitiesNearOrigin{r=1}
+    - damage{a=15} @EntitiesNearOrigin{r=0}
+
+    - throw{velocity=3;velocityY=1} @PlayersNearOrigin{r=10}
+
+    - delay 100
+    - setstance{stance=normal} @self
+    - setAI{ai=true} @self
+
+jabPunchLeft:
+  Skills:
+  - CancelEvent
+  - skill{s=mele;cd=3}  
+  - stance{s=normal;str=true} true
+mele:
+  Conditions:
+  - offgcd
+  - targetwithin 5
+  Skills:
+  - gcd{ticks=20}
+  - potion{type=SLOW;duration=40;level=10;p=false;force=true} @Self
+  - look{headOnly=false;immediately=false;repeat=15;repeatInterval=1} @Target
+  - state{state=jabPunchLeft;li=2;lo=4;n=false;speed=1.4} @self
+  - delay 20
+  - skill{s=throw;cd=0} ~onHit
+throw:
+  Conditions:
+  - targetwithin{d=4}
+  Skills:
+  - damage{amount=30;m=5;delay=1} @EntitiesInCone{r=5}
+  - throw{velocity=5;velocityY=3} @target
+
+
+run:
+  Conditions:
+    - targetwithin{d=20} true
+    - stance{s=normal;str=true} true
+  Skills:
+    - state{s=walk;remove=true} @self
+    - state{s=punch;remove=true} @self
+    - state{s=airSmash;remove=true} @self
+    - state{s=smash;remove=true} @self
+    - state{s=heavyBladeSlash;remove=true} @self
+    - state{s=quickBladeSlash;remove=true} @self
+    
+    - state{s=run} @self
+   
+    - potion{type=SPEED;duration=120;level=3;hasParticles=false} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+    - effect:particles{particle=cloud;amount=30;hS=2;vS=0.5;speed=0.15} @self
+    
+    - look{headOnly=false;immediately=false;repeat=30;repeatInterval=2} @target{r=20}
+    - skill{s=runCharge;cd=0} @target{r=2}
+    
+    - delay 100
+    - skill{s=runSmash;cd=0} @self
+
+runCharge:
+  Conditions:
+    - targetwithin{d=2} false
+  Skills:
+    - delay 5
+    - skill{s=runCharge;cd=0} @target
+    
+  ElseSkills:
+    - skill{s=runSmash;cd=0} @self
+
+runSmash:
+  Skills:
+    - state{s=run;remove=true} @self
+    - state{state=runSmash} @self
+    - setAI{ai=false} @self
+    
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+    - delay 10
+    
+    - effect:particles{particle=reverse_portal;amount=100;hS=1;vS=1;speed=0.3} @self
+    - effect:sound{s=entity.generic.explode;v=2;p=0.6} @self
+    - effect:sound{s=entity.warden.attack_impact;v=2;p=0.7} @self
+    - effect:particles{particle=explosion_emitter;amount=1} @self
+    - effect:particles{particle=cloud;amount=150;hS=4;vS=1;speed=0.15} @self
+    - effect:particles{particle=block;material=stone;amount=120;hS=3;vS=1} @self
+    - effect:particles{particle=sonic_boom;amount=8;hS=2;vS=0.5} @self
+    
+    - damage{a=15} @EntitiesNearOrigin{r=10}
+    - damage{a=15} @EntitiesNearOrigin{r=1}
+    - damage{a=15} @EntitiesNearOrigin{r=0}
+    - throw{velocity=3;velocityY=1} @PlayersNearOrigin{r=10}
+    
+    - delay 100
+    - setstance{stance=normal} @self
+ 
+
+quickBladeSlash:
+  Conditions:
+    - playersinradius{a=>0;r=30} true
+    - stance{s=normal;str=true} true
+  Skills:
+    - setAI{ai=false} @self
+    - state{s=walk;remove=true} @self
+    - state{s=run;remove=true} @self
+    - state{s=punch;remove=true} @self
+    - state{s=smash;remove=true} @self
+    - state{s=quickSmash;remove=true} @self
+    - state{s=airSmash;remove=true} @self
+    - state{s=heavyBladeSlash;remove=true} @self
+    - teleport{offset=0,0,-2.5} @NearestPlayer{r=30}
+    
+    - delay 2
+    
+    - state{state=quickBladeSlash} @self
+    - setstance{stance=quickBladeSlash} @self
+    
+    - effect:particles{particle=portal;amount=60;hS=0.8;vS=1;speed=0.2} @self
+    - effect:particles{particle=soul_fire_flame;amount=30;hS=1;vS=0.5;speed=0.1} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+    
+    - delay 8
+
+    # Slash startup sound
+    - effect:sound{s=entity.player.attack.sweep;v=2;p=1.2} @self
+   
+    - effect:particles{particle=sweep_attack;amount=40;hS=2;vS=1;speed=0.3} @self
+    - effect:particles{particle=soul;amount=25;hS=1;vS=0.5;speed=0.1} @self
+
+    - effect:sound{s=entity.player.attack.knockback;v=2;p=1.1} @self
+    - effect:sound{s=entity.warden.attack_impact;v=1.5;p=0.8} @self
+    
+    - effect:particles{particle=reverse_portal;amount=50;hS=1.2;vS=0.8;speed=0.2} @self
+    - effect:particles{particle=cloud;amount=80;hS=2;vS=0.8;speed=0.1} @self
+
+    - damage{a=28} @EntitiesInCone{r=6}
+    - damage{a=28} @EntitiesNearOrigin{r=1}
+    - throw{velocity=6;velocityY=2} @PlayersNearOrigin{r=8}
+
+    - delay 60
+
+    - setstance{stance=normal} @self
+    - setAI{ai=true} @self
+
+
+heavyBladeSlash:
+  Conditions:
+    - playersinradius{a=>0;r=30} true
+    - stance{s=normal;str=true} true
+  Skills:
+    - setAI{ai=false} @self
+    - state{s=walk;remove=true} @self
+    - state{s=run;remove=true} @self
+    - state{s=punch;remove=true} @self
+    - state{s=smash;remove=true} @self
+    - state{s=quickSmash;remove=true} @self
+    - state{s=airSmash;remove=true} @self
+    - state{s=quickBladeSlash;remove=true} @self
+
+    - state{state=bladeSlash} @self
+    - setstance{stance=bladeSlash} @self
+
+    - effect:particles{particle=portal;amount=60;hS=0.8;vS=1;speed=0.2} @self
+    - effect:particles{particle=soul_fire_flame;amount=30;hS=1;vS=0.5;speed=0.1} @self
+    - effect:sound{s=entity.evoker.prepare_attack;v=2;p=0.5} @self
+    
+    - effect:particles{particle=glow_squid_ink;amount=20;hS=1;vS=0.5;speed=0.05} @self
+    
+    - delay 25
+    
+    - effect:particles{particle=sweep_attack;amount=80;hS=4;vS=2;speed=0.4} @self
+    - effect:particles{particle=soul;amount=50;hS=2;vS=1;speed=0.15} @self
+
+    - effect:sound{s=entity.player.attack.sweep;v=2.5;p=0.8} @self
+    - effect:sound{s=entity.player.attack.knockback;v=2.5;p=1.0} @self
+    - effect:sound{s=entity.warden.attack_impact;v=2.5;p=1.2} @self
+
+    - effect:particles{particle=reverse_portal;amount=100;hS=3;vS=1.5;speed=0.3} @self
+    - effect:particles{particle=cloud;amount=150;hS=5;vS=1;speed=0.15} @self
+    - effect:particles{particle=sonic_boom;amount=10;hS=4;vS=1;speed=0.2} @self
+
+    - damage{a=30} @EntitiesInRadius{r=30}
+    - throw{velocity=12;velocityY=4} @PlayersInRadius{r=20}
+
+    - delay 80
+
+    # Reset
+    - setstance{stance=normal} @self
+    - setAI{ai=true} @self
+
