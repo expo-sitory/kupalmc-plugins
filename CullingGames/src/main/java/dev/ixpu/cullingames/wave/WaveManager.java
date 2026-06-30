@@ -96,14 +96,14 @@ public class WaveManager {
         int playerCount = onlinePlayers.size();
         
         for (MobSpawn mobSpawn : wave.getMobs()) {
-            int totalToSpawn = mobSpawn.getAmount() * playerCount;
-            for (int i = 0; i < totalToSpawn; i++) {
-                long delay = (long) ((configManager.getWaveDuration() / totalToSpawn) * 20 * i);
-                
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    Player target = onlinePlayers.get(new Random().nextInt(onlinePlayers.size()));
-                    spawnMobAtLocation(mobSpawn, target.getLocation());
-                }, delay);
+            for (int i = 0; i < mobSpawn.getAmount(); i++) {
+                for (Player player : onlinePlayers) {
+                    long delay = (long) ((configManager.getWaveDuration() / mobSpawn.getAmount()) * 20 * i);
+                    
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        spawnMobAtLocation(mobSpawn, player.getLocation());
+                    }, delay);
+                }
             }
         }
         
@@ -116,8 +116,9 @@ public class WaveManager {
             for (int i = 0; i < babyCreepersToSpawn; i++) {
                 long delay = (long) (Math.random() * configManager.getWaveDuration() * 20);
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    Player target = onlinePlayers.get(new Random().nextInt(onlinePlayers.size()));
-                    spawnMobAtLocation(babyCreeper, target.getLocation());
+                    for (Player player : onlinePlayers) {
+                        spawnMobAtLocation(babyCreeper, player.getLocation());
+                    }
                 }, delay);
             }
         }
