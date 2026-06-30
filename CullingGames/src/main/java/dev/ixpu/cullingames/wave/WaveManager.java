@@ -128,15 +128,34 @@ public class WaveManager {
         
         try {
             Random rand = new Random();
-            double offsetX = (rand.nextDouble() * 40) - 20;
-            double offsetZ = (rand.nextDouble() * 40) - 20;
+            Location spawnLoc = null;
             
-            Location spawnLoc = loc.clone();
-            spawnLoc.add(offsetX, 0, offsetZ);
+            for (int attempt = 0; attempt < 5; attempt++) {
+                double offsetX = (rand.nextDouble() * 40) - 20;
+                double offsetZ = (rand.nextDouble() * 40) - 20;
+                
+                Location testLoc = loc.clone();
+                testLoc.add(offsetX, 0, offsetZ);
+                
+                int highestY = testLoc.getWorld().getHighestBlockYAt(testLoc);
+                testLoc.setY(highestY + 1);
+                
+                if (isSafeSpawn(testLoc)) {
+                    spawnLoc = testLoc;
+                    break;
+                }
+            }
+            
+            if (spawnLoc == null) {
+                spawnLoc = loc.clone();
+                spawnLoc.setY(spawnLoc.getWorld().getHighestBlockYAt(spawnLoc) + 1);
+            }
             
             org.bukkit.entity.LivingEntity entity = MobBuilder.spawnMob(spawnLoc, mobSpawn.getMobData());
             
             if (entity != null) {
+                entity.setPersistent(true);
+                entity.setHealth(entity.getMaxHealth());
                 registerWaveMob(entity.getUniqueId(), mobSpawn.getPointValue());
             } else {
                 plugin.getLogger().warning(() -> "Failed to spawn mob: " + mobSpawn.getMobTypeId());
@@ -145,18 +164,22 @@ public class WaveManager {
             plugin.getLogger().warning(() -> "Failed to spawn mob: " + e.getMessage());
         }
     }
+    
+    private boolean isSafeSpawn(Location loc) {
+        return !loc.getBlock().isLiquid() && 
+               loc.getBlock().isEmpty() && 
+               loc.clone().add(0, 1, 0).getBlock().isEmpty();
+    }
 
     private void startCleanupTask() {
         cleanupTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            // Remove dead/invalid entities from tracking
             spawnedWaveMobs.removeIf(uuid -> {
                 Entity e = Bukkit.getEntity(uuid);
                 return e == null || !e.isValid() || e.isDead();
             });
             
-            // Sync wave mob points map
             waveMobPoints.entrySet().removeIf(e -> !spawnedWaveMobs.contains(e.getKey()));
-        }, 0L, 30 * 20L); // Every 30 seconds
+        }, 0L, 10 * 20L);
     }
 
     public void registerWaveMob(UUID entityUUID, int pointValue) {
