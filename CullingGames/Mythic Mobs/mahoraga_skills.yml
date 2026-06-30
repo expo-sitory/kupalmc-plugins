@@ -1,10 +1,13 @@
 MahoragaSpawn:
   Skills:
+  
   - model{mid=mahoraga;n=false} @self ~onSpawn
   - potion{type=GLOWING;duration=2147483647;level=1} @self ~onSpawn
   - potion{type=RESISTANCE;duration=2147483647;level=2} @self ~onSpawn
   - potion{type=REGENERATION;duration=2147483647;level=2} @self ~onSpawn
   - setstance{stance=normal} @self ~onSpawn
+
+  # Adapt Variables
   - setvariable{var=caster.LavaAdaptCount;type=INTEGER;val=0} @self
   - setvariable{var=caster.EntityExplosionAdaptCount;type=INTEGER;val=0} @self
   - setvariable{var=caster.BlockExplosionAdaptCount;type=INTEGER;val=0} @self
