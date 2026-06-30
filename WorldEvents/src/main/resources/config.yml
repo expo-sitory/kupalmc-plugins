@@ -7,5 +7,3 @@ Inflation:
 # Disable Player XP Gain
 Stagnation:
   enabled: false
-  allow-xp-bottles-for-mending: false
-  allow-xp-bottles-for-xp-gain: false
