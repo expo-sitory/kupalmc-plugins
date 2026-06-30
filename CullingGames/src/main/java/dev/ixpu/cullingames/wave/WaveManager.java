@@ -31,6 +31,7 @@ public class WaveManager {
     
     private final Set<UUID> spawnedWaveMobs = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> waveMobPoints = new ConcurrentHashMap<>();
+    private final Set<org.bukkit.Chunk> loadedChunks = ConcurrentHashMap.newKeySet();
 
     public WaveManager(CullingGamesPlugin plugin, EventManager eventManager) {
         this.plugin = plugin;
@@ -64,6 +65,12 @@ public class WaveManager {
         despawnAllWaveMobs();
         spawnedWaveMobs.clear();
         waveMobPoints.clear();
+        
+        for (org.bukkit.Chunk chunk : loadedChunks) {
+            chunk.setForceLoaded(false);
+        }
+        loadedChunks.clear();
+        
         currentWaveIndex = 0;
     }
 
@@ -156,8 +163,13 @@ public class WaveManager {
             
             if (entity != null) {
                 entity.setPersistent(true);
+                entity.setRemoveWhenFarAway(false);
                 entity.setHealth(entity.getMaxHealth());
                 registerWaveMob(entity.getUniqueId(), mobSpawn.getPointValue());
+                
+                org.bukkit.Chunk chunk = spawnLoc.getChunk();
+                chunk.setForceLoaded(true);
+                loadedChunks.add(chunk);
             } else {
                 plugin.getLogger().warning(() -> "Failed to spawn mob: " + mobSpawn.getMobTypeId());
             }
