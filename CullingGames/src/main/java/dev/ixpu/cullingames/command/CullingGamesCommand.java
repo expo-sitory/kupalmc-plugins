@@ -258,7 +258,7 @@ public class CullingGamesCommand implements CommandExecutor, TabCompleter {
             eventManager.getPoints(a)
         ));
 
-        sender.sendMessage(Component.text("§8══════════ §b§lCullingGames Stats [" + eventManager.getTimerFormatted() + "] §8══════════", NamedTextColor.GOLD));
+        sender.sendMessage(Component.text("§8══════ §b§lCullingGames Stats [" + eventManager.getTimerFormatted() + "] §8══════", NamedTextColor.GOLD));
         int rank = 1;
         for (UUID uuid : sorted) {
             Player p = Bukkit.getPlayer(uuid);
