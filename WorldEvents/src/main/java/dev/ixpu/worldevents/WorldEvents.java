@@ -19,7 +19,8 @@ public final class WorldEvents extends JavaPlugin {
         // Register Stagnation listener
         getServer().getPluginManager().registerEvents(new StagnationListener(this), this);
 
-        getCommand("worldevents").setExecutor(new WorldEventsCommandExecutor(this));
+        // Register command
+        getCommand("we").setExecutor(new WorldEventsCommandExecutor(this));
 
         getLogger().info("WorldEvents plugin enabled!");
     }
@@ -43,14 +44,6 @@ public final class WorldEvents extends JavaPlugin {
 
     public boolean isStagnationEnabled() {
         return getConfig().getBoolean("Stagnation.enabled", false);
-    }
-
-    public boolean allowXpBottlesForMending() {
-        return getConfig().getBoolean("Stagnation.allow-xp-bottles-for-mending", false);
-    }
-
-    public boolean allowXpBottlesForXpGain() {
-        return getConfig().getBoolean("Stagnation.allow-xp-bottles-for-xp-gain", false);
     }
 
     public void clearRecipeCache() {
